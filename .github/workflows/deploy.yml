@@ -1,0 +1,75 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  # Frontend deployment (Vercel handles this automatically, but we can add checks)
+  frontend-checks:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: frontend/package-lock.json
+    
+    - name: Install frontend dependencies
+      run: |
+        cd frontend
+        npm ci
+    
+    - name: Build frontend
+      run: |
+        cd frontend
+        npm run build
+    
+    - name: Run frontend tests
+      run: |
+        cd frontend
+        npm test -- --passWithNoTests
+
+  # Backend deployment
+  backend-deploy:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.21'
+    
+    - name: Test backend
+      run: go test -v ./...
+    
+    - name: Build backend
+      run: go build -v ./cmd/api
+    
+    # Deploy to Railway (if using Railway)
+    - name: Deploy to Railway
+      if: env.RAILWAY_TOKEN
+      uses: railwayapp/railway-deploy-action@v1.1.0
+      with:
+        railway_token: ${{ secrets.RAILWAY_TOKEN }}
+        service: belvo-api
+        
+    # Alternative: Deploy to Render (if using Render)
+    - name: Deploy to Render
+      if: env.RENDER_API_KEY
+      run: |
+        curl -X POST \
+          -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
+          -H "Content-Type: application/json" \
+          https://api.render.com/v1/services/${{ secrets.RENDER_SERVICE_ID }}/deploys
+
+env:
+  RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+  RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}

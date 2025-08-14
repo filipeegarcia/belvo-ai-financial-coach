@@ -1,0 +1,31 @@
+services:
+  - type: web
+    name: belvo-api
+    env: go
+    buildCommand: go build -o bin/api cmd/api/main.go
+    startCommand: ./bin/api
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: PORT
+        value: 8000
+      - key: GOFR_HTTP_PORT
+        value: 8000
+      - key: ENABLE_METRICS
+        value: false
+      - key: METRICS_PORT
+        value: 0
+      - key: GOFR_METRICS_PORT
+        value: 0
+      - key: GOFR_ENABLE_METRICS
+        value: false
+      - key: GOFR_TELEMETRY
+        value: false
+      - key: BELVO_ENVIRONMENT
+        value: sandbox
+      - key: BELVO_SECRET_ID
+        sync: false  # Set this in Render dashboard
+      - key: BELVO_SECRET_PASSWORD
+        sync: false  # Set this in Render dashboard
+      - key: OPENAI_API_KEY
+        sync: false  # Set this in Render dashboard
