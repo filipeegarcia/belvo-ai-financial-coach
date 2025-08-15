@@ -124,30 +124,6 @@ The AI Financial Coach has access to:
 - "What's my monthly income vs expenses?"
 - "Analyze my spending patterns"
 
-## 🚀 Deployment
-
-### Automatic Deployment
-Every push to `main` branch triggers:
-1. **Frontend deployment** to Vercel
-2. **Backend deployment** to Railway
-3. **End-to-end testing** via GitHub Actions
-
-### Production URLs
-- **Frontend**: `https://filipegarcia.co/belvo`
-- **Backend**: `https://api.filipegarcia.co`
-
-### Manual Deployment
-
-#### Backend (Railway)
-1. Connect GitHub repository to Railway
-2. Set environment variables
-3. Deploy with auto-detect Go buildpack
-
-#### Frontend (Vercel)  
-1. Connect GitHub repository to Vercel
-2. Set build directory to `frontend`
-3. Configure custom domain with `/belvo` path
-
 ## 🔧 Development
 
 ### Backend Development
