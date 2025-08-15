@@ -15,7 +15,6 @@ A comprehensive AI-powered financial coaching application that provides personal
 ## 🚀 Live Demo
 
 - **Production App**: `https://filipegarcia.co/belvo`
-- **API Documentation**: Available at the root endpoint
 
 ## 🏗️ Architecture
 
