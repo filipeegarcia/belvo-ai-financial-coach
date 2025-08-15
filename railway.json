@@ -1,9 +1,10 @@
 {
   "build": {
-    "builder": "nixpacks"
+    "builder": "nixpacks",
+    "buildCommand": "go build -o bin/api cmd/api/main.go"
   },
   "deploy": {
-    "startCommand": "go run cmd/api/main.go",
+    "startCommand": "./bin/api",
     "healthcheckPath": "/health",
     "healthcheckTimeout": 100
   }
