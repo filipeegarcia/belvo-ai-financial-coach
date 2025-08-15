@@ -37,6 +37,7 @@ jobs:
         run: railway deploy
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+          RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
           RAILWAY_SERVICE: belvo-api
           BELVO_SECRET_ID: ${{ secrets.BELVO_SECRET_ID }}
           BELVO_SECRET_PASSWORD: ${{ secrets.BELVO_SECRET_PASSWORD }}
