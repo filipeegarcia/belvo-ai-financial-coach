@@ -1,8 +1,6 @@
 module ai-financial-coach
 
-go 1.24
-
-toolchain go1.24.1
+go 1.21
 
 require gofr.dev v1.35.0
 
