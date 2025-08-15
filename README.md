@@ -23,18 +23,6 @@ A comprehensive AI-powered financial coaching application that provides personal
 - **Financial Data**: Belvo API (sandbox environment)
 - **Authentication**: Belvo credentials-based auth
 
-### Frontend
-- **Framework**: Next.js 15 with React 19
-- **Styling**: Tailwind CSS with Typography plugin
-- **Markdown**: React Markdown for AI responses
-- **State Management**: React useState with sessionStorage
-
-### Deployment
-- **Backend**: Railway (auto-deploy from GitHub)
-- **Frontend**: Vercel (auto-deploy from GitHub)
-- **CI/CD**: GitHub Actions
-- **Domains**: Custom domain support
-
 ## 🛠️ Technology Stack
 
 | Component | Technology | Version |
