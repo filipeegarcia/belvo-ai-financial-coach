@@ -22,7 +22,6 @@ A comprehensive AI-powered financial coaching application that provides personal
 - **AI Integration**: OpenAI GPT-4 with transaction context
 - **Financial Data**: Belvo API (sandbox environment)
 - **Authentication**: Belvo credentials-based auth
-- **Caching**: In-memory context cache for AI responses
 
 ### Frontend
 - **Framework**: Next.js 15 with React 19
