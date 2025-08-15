@@ -1,235 +1,88 @@
 # 🤖 AI Financial Coach
 
-A comprehensive AI-powered financial coaching application that provides personalized financial analysis and recommendations using real banking data through Belvo API Sandbox integration.
+An intelligent financial coaching platform that provides personalized financial analysis and investment recommendations using real banking data through Belvo API integration and OpenAI GPT-4.
 
-## 🌟 Features
+**Live Demo**: https://belvo-ai-financial-coach.vercel.app
 
-- **Real Banking Data Integration** via Belvo API (`erebor_br_retail`)
-- **AI-Powered Financial Analysis** using OpenAI GPT-4
-- **Interactive Chat Interface** for personalized financial coaching
-- **Comprehensive Transaction Analysis** with detailed spending insights
-- **Account Management** with multi-account support
-- **Production-Ready Deployment** with auto-deployment pipeline
+## Quick Test
 
-## 🚀 Live Demo
+For immediate testing, load the "Test Credentials" on auth screen.
 
-- **Production App**: `https://filipegarcia.co/belvo`
+## Features
 
-## 🏗️ Architecture
+- **Real Banking Data Integration**: Connects to real financial institutions via Belvo API
+- **AI-Powered Financial Analysis**: Advanced GPT-4 analysis of spending patterns and financial health
+- **Interactive Chat Interface**: Natural language conversations about your finances
+- **Investment Recommendations**: Personalized portfolio suggestions based on your financial profile
+- **Real-time Market Data**: Live market data from Yahoo Finance, CoinGecko, and Brazilian Central Bank
+- **Multi-Account Support**: Analyze multiple bank accounts and customer links
+
+## AI Financial Coach Capabilities
+
+The AI coach provides comprehensive financial guidance by analyzing:
+- **Transaction History**: Complete spending analysis with categorization
+- **Account Balances**: Real-time account information across multiple institutions
+- **Income vs Expenses**: Monthly financial flow analysis
+- **Investment Opportunities**: Market-aware investment suggestions
+- **Risk Assessment**: Personalized risk profiling for investment recommendations
+- **Budget Optimization**: Actionable insights for expense management
+
+## User Workflow
+
+1. **Authentication**: User provides Belvo credentials for secure access
+2. **Link Selection**: System retrieves all available customer links from connected institutions
+3. **Data Analysis**: User selects a specific customer link for detailed financial analysis
+4. **AI Coaching**: Interactive chat interface provides personalized financial guidance
+5. **Investment Recommendations**: AI suggests portfolio allocations based on financial profile
+
+## Banking Integration
+
+**Primary Institution**: `erebor_br_retail` (Belvo Sandbox)
+- Chosen for reliability and direct API compatibility
+- Provides comprehensive financial data including accounts, transactions, and owner information
+
+**Why not `ofmockbank_br_retail`?**
+- Requires Open Finance Brazil authentication flow
+- Needs Belvo Connect Widget for consent management
+- Limited direct API access
+
+## Technology Stack
 
 ### Backend
-- **Framework**: GoFr v1.35.0 (Go web framework)
-- **AI Integration**: OpenAI GPT-4 with transaction context
-- **Financial Data**: Belvo API (sandbox environment)
-- **Authentication**: Belvo credentials-based auth
+- **Language**: Go 1.21+
+- **Framework**: GoFr v1.43.0
+- **APIs**: Belvo (Banking), OpenAI (AI), Yahoo Finance (Market Data), CoinGecko (Crypto)
 
-## 🛠️ Technology Stack
+### Frontend
+- **Framework**: Next.js 15.4.6
+- **React**: 19.1.0
+- **Styling**: Tailwind CSS 3.4.17
 
-| Component | Technology | Version |
-|-----------|------------|---------|
-| Backend Language | Go | 1.21 |
-| Web Framework | GoFr | v1.35.0 |
-| Frontend Framework | Next.js | 15.4.6 |
-| React | React | 19.1.0 |
-| AI Provider | OpenAI | GPT-4 |
-| Financial API | Belvo | Sandbox |
-| Deployment | Railway + Vercel | - |
-| Styling | Tailwind CSS | 3.4.17 |
+### Infrastructure
+- **Backend Deployment**: Railway
+- **Frontend Deployment**: Vercel
+- **Domain**: Custom subdomain (belvo.filipegarcia.co)
 
-## 📋 Prerequisites
+## Architecture
 
-- **Go 1.21+** installed
-- **Node.js 18+** installed
-- **Git** for version control
-- **Belvo API credentials** (sandbox environment)
-- **OpenAI API key**
-
-## 🚀 Quick Start
-
-### 1. Clone & Setup
-```bash
-git clone <repository-url>
-cd poc
-
-# Backend setup
-go mod tidy
-
-# Frontend setup
-cd frontend
-npm install
-cd ..
+```
+Frontend (Next.js) → Backend API (Go) → External APIs
+                                    ├── Belvo API (Banking Data)
+                                    ├── OpenAI API (AI Analysis)
+                                    ├── Yahoo Finance (Market Data)
+                                    └── CoinGecko (Crypto Data)
 ```
 
-### 2. Environment Configuration
-```bash
-# Backend Environment Variables
-export BELVO_SECRET_ID=your-belvo-secret-id
-export BELVO_SECRET_PASSWORD=your-belvo-secret-password
-export OPENAI_API_KEY=your-openai-api-key
-export BELVO_ENVIRONMENT=sandbox
-```
+## Automated Deployment
 
-### 3. Run Development Environment
-```bash
-# Terminal 1: Start Backend (port 8000)
-go run cmd/api/main.go
+- **CI/CD**: Native Vercel/Railway integrations with GitHub
+- **Backend**: Auto-deploys to Railway on main branch commits
+- **Frontend**: Auto-deploys to Vercel with custom domain configuration
+- **Environment**: Production environment variables managed through secrets
 
-# Terminal 2: Start Frontend (port 3000)
-cd frontend
-npm run dev
-```
+## Security
 
-### 4. Access the Application
-- **Frontend**: http://localhost:3000
-- **Backend API**: http://localhost:8000
-- **Health Check**: http://localhost:8000/health
-
-## 🔄 User Flow
-
-1. **Authentication**: Enter Belvo credentials
-2. **Account Selection**: Choose from available customer accounts
-3. **Data Loading**: Progressive loading of financial data (accounts, transactions, income)
-4. **AI Chat**: Interactive financial coaching with full transaction context
-
-## 🎯 Belvo Integration Details
-
-### Institution Used
-**`erebor_br_retail`** - Chosen for reliability and compatibility
-
-### Why Not `ofmockbank_br_retail`?
-- Requires Open Finance Brazil specific authentication flow
-- Needs Belvo Connect Widget for consent management  
-- Not accessible via direct API calls
-- Lacks proper documentation for direct integration
-
-### Data Retrieved
-- **Accounts**: Account details, balances, types
-- **Transactions**: Last 3 months of transaction history
-- **Owners**: Account holder information
-- **Income**: Income stream analysis
-- **Financial Summary**: Aggregated financial metrics
-
-## 🤖 AI Capabilities
-
-The AI Financial Coach has access to:
-- **Complete transaction history** with descriptions, amounts, dates
-- **Account balances** and types
-- **Income and expense patterns**
-- **Monthly financial summaries**
-- **Spending categorization**
-
-### Sample AI Interactions
-- "Show me my last 10 transactions"
-- "How much did I spend on credit cards this month?"
-- "What's my monthly income vs expenses?"
-- "Analyze my spending patterns"
-
-## 🔧 Development
-
-### Backend Development
-```bash
-# Run with auto-restart
-go run cmd/api/main.go
-
-# Build binary
-go build -o bin/api cmd/api/main.go
-
-# Test endpoints
-curl http://localhost:8000/health
-```
-
-### Frontend Development
-```bash
-cd frontend
-
-# Development server
-npm run dev
-
-# Build for production
-npm run build
-
-# Start production server
-npm start
-```
-
-### Environment Variables
-
-#### Backend (Required)
-```bash
-BELVO_SECRET_ID=your-belvo-secret-id
-BELVO_SECRET_PASSWORD=your-belvo-secret-password  
-OPENAI_API_KEY=your-openai-api-key
-BELVO_ENVIRONMENT=sandbox
-```
-
-#### Frontend (Production)
-```bash
-NEXT_PUBLIC_API_URL=https://api.filipegarcia.co
-NEXT_PUBLIC_ENVIRONMENT=production
-```
-
-## 🔍 Key Features Explained
-
-### Progressive Data Loading
-1. **Phase 1**: Instant display of basic account information
-2. **Phase 2**: Detailed financial data loading after account selection
-3. **Optimization**: Parallel API calls for maximum speed
-
-### AI Context Management
-- **Caching**: Financial data cached for 24 hours
-- **Context Building**: Comprehensive transaction summaries for AI
-- **Real-time**: AI responses with full financial context
-
-### Error Handling
-- **Graceful degradation** when Belvo API is unavailable
-- **User-friendly error messages**
-- **Retry mechanisms** for transient failures
-
-## 🧪 Testing
-
-### Backend Testing
-```bash
-# Test health endpoint
-curl http://localhost:8000/health
-
-# Test with real credentials
-curl -X POST http://localhost:8000/api/belvo/test-connection \
-  -H "Content-Type: application/json" \
-  -d '{"secret_id":"your-id","secret_key":"your-key"}'
-```
-
-### Frontend Testing  
-```bash
-cd frontend
-npm test
-```
-
-## 📈 Performance
-
-- **Initial load**: ~2-3 seconds for account list
-- **Detailed data**: ~15-30 seconds for comprehensive financial data
-- **AI responses**: ~3-5 seconds with cached context
-- **Caching**: 24-hour financial data cache for repeat interactions
-
-## 🔒 Security
-
-- **No data persistence**: Financial data not stored permanently
-- **Credential handling**: Secure credential transmission
-- **Session management**: Client-side session storage only
-- **HTTPS**: All production traffic encrypted
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
-
-## 📄 License
-
-This project is for demonstration purposes and educational use.
-
----
-
-**Built with ❤️ using Go, Next.js, and AI**
+- **No Data Persistence**: Financial data is not stored permanently
+- **Secure Transmission**: All API communications over HTTPS
+- **Session Management**: Client-side session storage only
+- **Credential Handling**: Secure credential transmission without server-side storage
