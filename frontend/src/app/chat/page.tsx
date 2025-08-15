@@ -19,7 +19,7 @@ interface BelvoSession {
   authenticated: boolean
   dataStatus?: string
   timestamp: number
-  method?: 'direct' | 'widget' | 'link_selection'
+  method?: 'direct' | 'widget' | 'link_selection' | 'direct_link' | 'selected_link'
   widgetUrl?: string
 }
 
@@ -37,17 +37,18 @@ interface DetailedBelvoLink {
   link_id: string
   owner_name: string
   account_count: number
-  accounts: any[]
-  account_categories: any
-  accounts_by_category: any
+  accounts: Record<string, unknown>[]
+  account_categories: Record<string, unknown>
+  accounts_by_category: Record<string, unknown>
   transaction_count: number
-  recent_transactions: any[]
+  recent_transactions: Record<string, unknown>[]
   total_balance: number
   currency: string
   has_data: boolean
-  financial_summary: any
+  financial_summary: Record<string, unknown>
   ai_context_summary: string
   data_scope?: string
+  institution?: string
 }
 
 export default function ChatPage() {
@@ -59,7 +60,6 @@ export default function ChatPage() {
   const [availableLinks, setAvailableLinks] = useState<BelvoLink[]>([])
   const [selectedLink, setSelectedLink] = useState<DetailedBelvoLink | null>(null)
   const [showLinkSelection, setShowLinkSelection] = useState(false)
-  const [isLoadingDetails, setIsLoadingDetails] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
 
@@ -121,7 +121,7 @@ export default function ChatPage() {
       timestamp: new Date()
     }
     setMessages([welcomeMessage])
-  }, [language])
+  }, [language, router])
 
   const sendMessage = async () => {
     if (!inputMessage.trim() || !session) return
@@ -189,7 +189,7 @@ export default function ChatPage() {
       console.log('📦 AI Response data:', data)
       
       // Try different response formats
-      let aiContent = 
+      const aiContent = 
         data.data?.chat_response?.message ||
         data.chat_response?.message ||
         data.data?.chat_response?.response ||
@@ -256,7 +256,6 @@ export default function ChatPage() {
   }
 
   const handleLinkSelection = async (link: BelvoLink) => {
-    setIsLoadingDetails(true)
     setShowLinkSelection(false)
     
     // Show enhanced loading message with progress indicators
@@ -343,8 +342,8 @@ export default function ChatPage() {
         sessionStorage.setItem('belvo_session', JSON.stringify(updatedSession))
 
         // Show success message with comprehensive data
-        const monthlyIncome = detailedLink.financial_summary?.monthly_income || 0
-        const monthlyExpenses = detailedLink.financial_summary?.monthly_variable_expenses || 0
+        const monthlyIncome = Number(detailedLink.financial_summary?.monthly_income) || 0
+        const monthlyExpenses = Number(detailedLink.financial_summary?.monthly_variable_expenses) || 0
         const savingsRate = monthlyIncome > 0 ? ((monthlyIncome - monthlyExpenses) / monthlyIncome * 100) : 0
         
         const welcomeMessage: Message = {
@@ -400,8 +399,6 @@ export default function ChatPage() {
       }
       setMessages([errorMessage])
       setShowLinkSelection(true) // Go back to selection
-    } finally {
-      setIsLoadingDetails(false)
     }
   }
 
@@ -476,7 +473,6 @@ export default function ChatPage() {
               </p>
               
               <div className="grid gap-4 max-h-96 overflow-y-auto">
-                {console.log('🎯 Rendering links:', availableLinks.length, availableLinks)}
                 {availableLinks.length === 0 ? (
                                       <div className="text-center text-gray-500 py-8">
                       <p>{language === 'en' ? 'Loading customer links...' : 'Carregando links de clientes...'}</p>

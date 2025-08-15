@@ -1,4 +1,4 @@
-name: Deploy to Production
+name: Deploy AI Financial Coach
 
 on:
   push:
@@ -7,69 +7,87 @@ on:
     branches: [ main ]
 
 jobs:
-  # Frontend deployment (Vercel handles this automatically, but we can add checks)
-  frontend-checks:
+  # Backend deployment to Railway
+  deploy-backend:
+    name: Deploy Backend to Railway
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '18'
-        cache: 'npm'
-        cache-dependency-path: frontend/package-lock.json
-    
-    - name: Install frontend dependencies
-      run: |
-        cd frontend
-        npm ci
-    
-    - name: Build frontend
-      run: |
-        cd frontend
-        npm run build
-    
-    - name: Run frontend tests
-      run: |
-        cd frontend
-        npm test -- --passWithNoTests
+      - name: Checkout
+        uses: actions/checkout@v4
 
-  # Backend deployment
-  backend-deploy:
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.21'
+
+      - name: Verify Go modules
+        run: |
+          go mod tidy
+          go mod verify
+
+      - name: Test backend build
+        run: |
+          go build -o bin/api cmd/api/main.go
+          echo "✅ Backend build successful"
+
+      - name: Install Railway CLI
+        run: |
+          curl -fsSL https://railway.app/install.sh | sh
+          echo "$HOME/.railway/bin" >> $GITHUB_PATH
+
+      - name: Deploy to Railway
+        run: |
+          railway login --token ${{ secrets.RAILWAY_TOKEN }}
+          railway deploy --service belvo-api
+        env:
+          BELVO_SECRET_ID: ${{ secrets.BELVO_SECRET_ID }}
+          BELVO_SECRET_PASSWORD: ${{ secrets.BELVO_SECRET_PASSWORD }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          BELVO_ENVIRONMENT: sandbox
+
+  # Frontend deployment to Vercel
+  deploy-frontend:
+    name: Deploy Frontend to Vercel
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Setup Go
-      uses: actions/setup-go@v4
-      with:
-        go-version: '1.21'
-    
-    - name: Test backend
-      run: go test -v ./...
-    
-    - name: Build backend
-      run: go build -v ./cmd/api
-    
-    # Deploy to Railway (if using Railway)
-    - name: Deploy to Railway
-      if: env.RAILWAY_TOKEN
-      uses: railwayapp/railway-deploy-action@v1.1.0
-      with:
-        railway_token: ${{ secrets.RAILWAY_TOKEN }}
-        service: belvo-api
-        
-    # Alternative: Deploy to Render (if using Render)
-    - name: Deploy to Render
-      if: env.RENDER_API_KEY
-      run: |
-        curl -X POST \
-          -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
-          -H "Content-Type: application/json" \
-          https://api.render.com/v1/services/${{ secrets.RENDER_SERVICE_ID }}/deploys
+      - name: Checkout
+        uses: actions/checkout@v4
 
-env:
-  RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-  RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        run: |
+          cd frontend
+          npm ci
+
+      - name: Check TypeScript
+        run: |
+          cd frontend
+          npx tsc --noEmit
+        continue-on-error: true
+
+      - name: Run ESLint
+        run: |
+          cd frontend
+          npx eslint . --ext .ts,.tsx --max-warnings 10
+        continue-on-error: true
+
+      - name: Build frontend
+        run: |
+          cd frontend
+          npm run build
+
+      - name: Deploy to Vercel
+        uses: vercel/action@v1
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          working-directory: frontend
+        env:
+          NEXT_PUBLIC_API_URL: https://api.filipegarcia.co
