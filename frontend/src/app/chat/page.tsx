@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 
+const API_URL = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000').replace(/\/$/, '')
+
 interface Message {
   id: string
   role: 'user' | 'assistant'
@@ -149,7 +151,7 @@ export default function ChatPage() {
     try {
       // First check if backend is running
       console.log('🔍 Step 1: Checking backend health...')
-      const healthResponse = await fetch('http://localhost:8000/health')
+      const healthResponse = await fetch(`${API_URL}/health`)
       
       if (!healthResponse.ok) {
         throw new Error('Backend server is not running. Please start the GoFr backend.')
@@ -159,7 +161,7 @@ export default function ChatPage() {
 
       // Send the AI chat request
       console.log('🤖 Step 2: Sending AI chat request...')
-      const response = await fetch('http://localhost:8000/api/ai/chat', {
+      const response = await fetch(`${API_URL}/api/ai/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -230,7 +232,7 @@ export default function ChatPage() {
   const fetchAvailableLinks = async (session: BelvoSession) => {
     try {
       console.log('🔍 Fetching available links...')
-      const response = await fetch('http://localhost:8000/api/belvo/links/for-selection', {
+      const response = await fetch(`${API_URL}/api/belvo/links/for-selection`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -284,7 +286,7 @@ export default function ChatPage() {
     try {
       // Load detailed data for selected customer
       console.log('🔍 Loading detailed data for:', link.id)
-      const response = await fetch(`http://localhost:8000/api/belvo/links/detailed-info/${link.id}`, {
+      const response = await fetch(`${API_URL}/api/belvo/links/detailed-info/${link.id}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -303,7 +305,7 @@ export default function ChatPage() {
         // Cache ALL Belvo data for complete AI context
         console.log('💾 Caching ALL Belvo financial data for AI...')
         try {
-          await fetch('http://localhost:8000/api/ai/cache-context', {
+          await fetch(`${API_URL}/api/ai/cache-context`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({

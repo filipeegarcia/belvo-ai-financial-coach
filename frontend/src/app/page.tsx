@@ -3,6 +3,8 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
+const API_URL = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000').replace(/\/$/, '')
+
 export default function AuthPage() {
   const [secretId, setSecretId] = useState('')
   const [secretKey, setSecretKey] = useState('')
@@ -30,7 +32,7 @@ export default function AuthPage() {
       console.log('🔐 Step 1: Testing Belvo authentication...')
       
       // First, test Belvo connection with provided credentials
-      const authResponse = await fetch('http://localhost:8000/api/belvo/test-connection', {
+      const authResponse = await fetch(`${API_URL}/api/belvo/test-connection`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
