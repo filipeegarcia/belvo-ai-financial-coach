@@ -103,51 +103,6 @@ npm run dev
 3. **Data Loading**: Progressive loading of financial data (accounts, transactions, income)
 4. **AI Chat**: Interactive financial coaching with full transaction context
 
-## 📁 Project Structure
-
-```
-poc/
-├── cmd/api/                 # Application entry point
-│   └── main.go             # Main server file
-├── internal/               # Private backend code
-│   ├── app/               # Application setup
-│   ├── api/               # HTTP handlers
-│   │   ├── belvo_handler.go
-│   │   └── ai_handler.go
-│   ├── service/           # Business logic
-│   │   ├── belvo_service.go
-│   │   └── ai_service.go
-│   └── models/            # Data models
-├── frontend/              # Next.js frontend
-│   ├── src/app/          # App router pages
-│   │   ├── page.tsx      # Auth page
-│   │   └── chat/page.tsx # Chat interface
-│   └── package.json
-├── .github/workflows/     # CI/CD pipelines
-├── railway.json          # Railway deployment config
-├── vercel.json           # Vercel deployment config
-├── go.mod               # Go dependencies
-└── README.md           # This file
-```
-
-## 🌐 API Endpoints
-
-### Authentication & Connection
-- `POST /api/belvo/test-connection` - Test Belvo credentials
-- `POST /api/belvo/create-erebor-link` - Create banking connection
-
-### Account Management  
-- `POST /api/belvo/links/for-selection` - Get available accounts (fast)
-- `POST /api/belvo/links/detailed-info/{link_id}` - Get detailed account data
-
-### AI Financial Coach
-- `POST /api/ai/chat` - Chat with AI financial coach
-- `POST /api/ai/cache-context` - Cache financial context
-
-### Utilities
-- `GET /health` - Health check
-- `POST /api/belvo/verify-data/{link_id}` - Verify data integrity
-
 ## 🎯 Belvo Integration Details
 
 ### Institution Used
