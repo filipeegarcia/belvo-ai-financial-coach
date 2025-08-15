@@ -1,6 +1,6 @@
 # 🤖 AI Financial Coach
 
-A comprehensive AI-powered financial coaching application that provides personalized financial analysis and recommendations using real banking data through Belvo API integration.
+A comprehensive AI-powered financial coaching application that provides personalized financial analysis and recommendations using real banking data through Belvo API Sandbox integration.
 
 ## 🌟 Features
 
