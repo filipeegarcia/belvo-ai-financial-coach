@@ -2,7 +2,7 @@
 
 An intelligent financial coaching platform that provides personalized financial analysis and investment recommendations using real banking data through Belvo API integration and OpenAI GPT-4.
 
-**Live Demo**: https://belvo-ai-financial-coach.vercel.app
+**Live Demo**: https://belvo.filipegarcia.co/
 
 ## Quick Test
 
